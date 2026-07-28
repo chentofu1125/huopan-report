@@ -293,7 +293,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-07-27（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-07-28 10:44:12</span>
+                            <span>生成时间：2026-07-28 11:00:49</span>
                         </p>
                     </div>
                 </div>
@@ -533,9 +533,10 @@
                             <th class="row1 th-blue-row1" rowspan="2">当前攻克率</th>
                             <th class="row1 th-blue-row1" rowspan="2">目标攻克率</th>
                             <th class="row1 th-blue-row1" rowspan="2">距目标差值</th>
-                            <th class="row1 th-blue-row1" rowspan="2">剩余天数</th>
-                            <th class="row1 th-blue-row1" rowspan="2">所需单日增长</th>
-                            <th class="row1 th-blue-row1" rowspan="2">实际DoD</th>
+                            <th class="row1 th-blue-row1" rowspan="2">单日所需增长（订单）</th>
+                            <th class="row1 th-blue-row1" rowspan="2">实际增长（订单）</th>
+                            <th class="row1 th-blue-row1" rowspan="2">单日所需增长（率）</th>
+                            <th class="row1 th-blue-row1" rowspan="2">实际DoD（率）</th>
                             <th class="row1 th-blue-row1" rowspan="2">进度状态</th>
                         </tr>
                         <tr>
@@ -617,7 +618,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-07-28 10:44:12 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-07-28 11:00:49 | 仅供参考</p>
         </div>
     </div>
 
@@ -4131,6 +4132,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 0.26,
                         "actual_dod": 1.29,
+                        "actual_dod_orders": 52,
                         "dod_status": "达标",
                         "city_target": 4012,
                         "current_conquer": 2366,
@@ -4146,6 +4148,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 2.33,
                         "actual_dod": 1.09,
+                        "actual_dod_orders": 44,
                         "dod_status": "低于目标",
                         "city_target": 4043,
                         "current_conquer": 2049,
@@ -4161,6 +4164,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 0.91,
                         "actual_dod": 1.75,
+                        "actual_dod_orders": 72,
                         "dod_status": "达标",
                         "city_target": 4111,
                         "current_conquer": 2316,
@@ -4176,6 +4180,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 2.26,
                         "actual_dod": 2.43,
+                        "actual_dod_orders": 27,
                         "dod_status": "达标",
                         "city_target": 1113,
                         "current_conquer": 734,
@@ -4191,6 +4196,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 7.48,
                         "actual_dod": 1.33,
+                        "actual_dod_orders": 18,
                         "dod_status": "低于目标",
                         "city_target": 1353,
                         "current_conquer": 610,
@@ -4206,6 +4212,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 6.05,
                         "actual_dod": 3.93,
+                        "actual_dod_orders": 30,
                         "dod_status": "低于目标",
                         "city_target": 764,
                         "current_conquer": 388,
@@ -4221,6 +4228,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 4.18,
                         "actual_dod": 16.95,
+                        "actual_dod_orders": 29,
                         "dod_status": "达标",
                         "city_target": 171,
                         "current_conquer": 74,
@@ -4236,6 +4244,7 @@
                         "remaining_days": 4,
                         "required_daily_growth": 2.95,
                         "actual_dod": 7.78,
+                        "actual_dod_orders": 15,
                         "dod_status": "达标",
                         "city_target": 193,
                         "current_conquer": 93,
@@ -4294,7 +4303,8 @@ const reportData = [
                                 "达标": 133,
                                 "上线率": 64.25
                         }
-                }
+                },
+                "攻克dod_orders": 52
         },
         {
                 "城市": "钦州市",
@@ -4335,7 +4345,8 @@ const reportData = [
                                 "达标": 119,
                                 "上线率": 73.01
                         }
-                }
+                },
+                "攻克dod_orders": 44
         },
         {
                 "城市": "梧州市",
@@ -4376,7 +4387,8 @@ const reportData = [
                                 "达标": 147,
                                 "上线率": 86.47
                         }
-                }
+                },
+                "攻克dod_orders": 72
         },
         {
                 "城市": "博白县",
@@ -4417,7 +4429,8 @@ const reportData = [
                                 "达标": 42,
                                 "上线率": 71.19
                         }
-                }
+                },
+                "攻克dod_orders": 27
         },
         {
                 "城市": "岑溪",
@@ -4458,7 +4471,8 @@ const reportData = [
                                 "达标": 41,
                                 "上线率": 57.75
                         }
-                }
+                },
+                "攻克dod_orders": 18
         },
         {
                 "城市": "田东县",
@@ -4499,7 +4513,8 @@ const reportData = [
                                 "达标": 10,
                                 "上线率": 71.43
                         }
-                }
+                },
+                "攻克dod_orders": 30
         },
         {
                 "城市": "东兰县",
@@ -4535,7 +4550,8 @@ const reportData = [
                                 "达标": 0,
                                 "上线率": 0.0
                         }
-                }
+                },
+                "攻克dod_orders": 29
         },
         {
                 "城市": "凤山县",
@@ -4566,7 +4582,8 @@ const reportData = [
                                 "达标": 5,
                                 "上线率": 50.0
                         }
-                }
+                },
+                "攻克dod_orders": 15
         }
 ];
 
@@ -6101,7 +6118,15 @@ function renderInsightsAnalysis() {
                 tableHtml += '</td>';
                 tableHtml += '<td>' + city.target_rate.toFixed(2) + '%</td>';
                 tableHtml += '<td class="' + (city.gap_to_target > 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold') + '">' + city.gap_to_target.toFixed(2) + '%</td>';
-                tableHtml += '<td>' + city.remaining_days + '天</td>';
+                // 单日所需增长（订单）
+                var dailyReqOrders = city.daily_required_count;
+                tableHtml += '<td class="font-semibold">' + (dailyReqOrders > 0 ? dailyReqOrders : '已达标') + '</td>';
+                // 实际增长（订单）
+                var actOrders = city.actual_dod_orders;
+                var actOrdersStr = (actOrders !== null && actOrders !== undefined && actOrders !== '-') ? ((actOrders >= 0 ? '+' : '') + actOrders) : '-';
+                var actOrdersClass = (actOrders !== null && actOrders !== undefined && actOrders !== '-' && actOrders >= 0) ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold';
+                tableHtml += '<td class="' + actOrdersClass + '">' + actOrdersStr + '</td>';
+                // 单日所需增长（率）
                 tableHtml += '<td class="font-semibold">' + (city.required_daily_growth > 0 ? city.required_daily_growth.toFixed(2) + '%' : '已达标') + '</td>';
                 tableHtml += '<td class="' + actualDodClass + '">' + actualDodStr + '</td>';
                 tableHtml += '<td>' + statusBadge + '</td>';
