@@ -295,7 +295,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-07-27（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-07-28 11:20:26</span>
+                            <span>生成时间：2026-07-28 11:22:08</span>
                         </p>
                     </div>
                 </div>
@@ -620,7 +620,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-07-28 11:20:26 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-07-28 11:22:08 | 仅供参考</p>
         </div>
     </div>
 
@@ -6120,7 +6120,7 @@ function renderInsightsAnalysis() {
                 tableHtml += '</td>';
                 tableHtml += '<td>' + city.target_rate.toFixed(2) + '%</td>';
                 tableHtml += '<td class="' + (city.gap_to_target > 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold') + '">' + city.gap_to_target.toFixed(2) + '%</td>';
-                // 单日所需增长（订单）
+                // 单日所需增长数
                 var dailyReqOrders = city.daily_required_count;
                 tableHtml += '<td class="font-semibold">' + (dailyReqOrders > 0 ? dailyReqOrders : '已达标') + '</td>';
                 // 实际增长（订单）
@@ -6128,7 +6128,7 @@ function renderInsightsAnalysis() {
                 var actOrdersStr = (actOrders !== null && actOrders !== undefined && actOrders !== '-') ? ((actOrders >= 0 ? '+' : '') + actOrders) : '-';
                 var actOrdersClass = (actOrders !== null && actOrders !== undefined && actOrders !== '-' && actOrders >= 0) ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold';
                 tableHtml += '<td class="' + actOrdersClass + '">' + actOrdersStr + '</td>';
-                // 单日所需增长（率）
+                // 单日所需增长率
                 tableHtml += '<td class="font-semibold">' + (city.required_daily_growth > 0 ? city.required_daily_growth.toFixed(2) + '%' : '已达标') + '</td>';
                 tableHtml += '<td class="' + actualDodClass + '">' + actualDodStr + '</td>';
                 tableHtml += '<td>' + statusBadge + '</td>';
