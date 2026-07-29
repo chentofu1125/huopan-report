@@ -169,6 +169,7 @@
         .col-blue  { background: #EFF6FF; }
         .col-cyan  { background: #ECFEFF; }
         .col-amber { background: #FFFBEB; }
+        .col-gold  { background: #FEF3C7 !important; font-weight: 600; }
 
         .data-table tbody tr:hover td {
             filter: brightness(0.97);
@@ -295,7 +296,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-07-28（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-07-29 09:56:40</span>
+                            <span>生成时间：2026-07-29 10:14:03</span>
                         </p>
                     </div>
                 </div>
@@ -620,7 +621,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-07-29 09:56:40 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-07-29 10:14:03 | 仅供参考</p>
         </div>
     </div>
 
@@ -4627,6 +4628,17 @@ const reportData = [
 
         const coverageCityData = [
         {
+                "城市": "总商维度",
+                "考核业务": "P+S",
+                "目标": 5716,
+                "日达标率": 84.15,
+                "W1达标率": 52.23,
+                "W2达标率": 83.79,
+                "W3达标率": 84.28,
+                "W4达标率": 84.45,
+                "月度覆盖率": 76.19
+        },
+        {
                 "城市": "玉林市",
                 "考核业务": "P+S",
                 "目标": 1504,
@@ -5670,6 +5682,42 @@ const reportData = [
                 "is_group_total": false
         }
 ];
+        const total8Summary = {
+        "城市": "总商维度",
+        "目标": 15760,
+        "达标": 12411,
+        "上线率": 78.75,
+        "攻克数": 9158,
+        "攻克率": 58.11,
+        "距目标差值": "-",
+        "来源明细": {
+                "拼好饭场域高销": {
+                        "目标": 2245,
+                        "达标": 2068,
+                        "上线率": 92.12
+                },
+                "拼好饭定品招商": {
+                        "目标": 1224,
+                        "达标": 870,
+                        "上线率": 71.08
+                },
+                "神抢手商品推荐": {
+                        "目标": 5986,
+                        "达标": 4132,
+                        "上线率": 69.03
+                },
+                "神抢手场域高销": {
+                        "目标": 5238,
+                        "达标": 4829,
+                        "上线率": 92.19
+                },
+                "神抢手组套推荐": {
+                        "目标": 699,
+                        "达标": 512,
+                        "上线率": 73.25
+                }
+        }
+};
 
         // ===== 工具函数 =====
         function getSource(row, sourceName, field) {
@@ -5749,6 +5797,35 @@ const reportData = [
                     html += '<td class="col-cyan text-gray-400">-</td>';
                     html += '<td class="col-cyan text-gray-400">-</td>';
                     html += '<td class="col-cyan text-gray-400">-</td>';
+                }
+            });
+            html += '</tr>';
+
+            // 总商维度行（8城合计，区别于广西区域72967）
+            var t8Row = total8Summary;
+            var t8RateClass = getRateClass(t8Row['上线率']);
+            var t8ConquerClass = getRateClass(t8Row['攻克率']);
+            html += '<tr class="summary-row total8-row">';
+            html += '<td class="city-cell col-gold">总商维度</td>';
+            html += '<td class="kpi-type-cell col-gold">汇总(8城)</td>';
+            html += '<td class="col-gold">' + t8Row['目标'] + '</td>';
+            html += '<td class="col-gold">' + t8Row['达标'] + '</td>';
+            html += '<td class="col-gold ' + t8RateClass + '">' + t8Row['上线率'].toFixed(2) + '%</td>';
+            html += '<td class="col-gold text-gray-400">-</td>';
+            html += '<td class="col-gold">' + t8Row['攻克数'] + '</td>';
+            html += '<td class="col-gold ' + t8ConquerClass + '">' + t8Row['攻克率'].toFixed(2) + '%</td>';
+            html += '<td class="col-gold text-gray-400">-</td>';
+            html += '<td class="col-gold text-gray-400">-</td>';
+            gxSrcOrder.forEach(function(src) {
+                var d = t8Row['来源明细'] ? t8Row['来源明细'][src] : null;
+                if (d) {
+                    html += '<td class="col-gold">' + d['目标'] + '</td>';
+                    html += '<td class="col-gold">' + d['达标'] + '</td>';
+                    html += '<td class="col-gold ' + getRateClass(d['上线率']) + '">' + d['上线率'].toFixed(2) + '%</td>';
+                } else {
+                    html += '<td class="col-gold text-gray-400">-</td>';
+                    html += '<td class="col-gold text-gray-400">-</td>';
+                    html += '<td class="col-gold text-gray-400">-</td>';
                 }
             });
             html += '</tr>';
@@ -5969,6 +6046,10 @@ const reportData = [
 
             // 只保留8城数据（不含广西区域），按攻克率排序
             var sorted = reportData.slice().sort(function(a, b) { return b['攻克率'] - a['攻克率']; });
+            // 追加总商维度柱（8城合计）
+            if (typeof total8Summary !== 'undefined' && total8Summary && total8Summary['攻克率'] !== undefined) {
+                sorted.push({城市: total8Summary['城市'], 攻克率: total8Summary['攻克率'], 目标率: 75, isTotal: true});
+            }
 
             Chart.register(ChartDataLabels);
 
@@ -5983,6 +6064,7 @@ const reportData = [
                         label: '攻克率 (%)',
                         data: sorted.map(function(d) { return d['攻克率']; }),
                         backgroundColor: sorted.map(function(d) {
+                            if (d.isTotal) return 'rgba(234,179,8,0.95)';
                             var tr = d['目标率'] || 75;
                             if (d['攻克率'] >= tr) return 'rgba(59,130,246,0.8)';
                             if (d['攻克率'] >= 50) return 'rgba(6,182,212,0.8)';
