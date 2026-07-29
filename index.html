@@ -296,7 +296,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-07-28（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-07-29 10:54:41</span>
+                            <span>生成时间：2026-07-29 11:45:44</span>
                         </p>
                     </div>
                 </div>
@@ -621,7 +621,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-07-29 10:54:41 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-07-29 11:45:44 | 仅供参考</p>
         </div>
     </div>
 
@@ -5797,35 +5797,6 @@ const reportData = [
                     html += '<td class="col-cyan text-gray-400">-</td>';
                     html += '<td class="col-cyan text-gray-400">-</td>';
                     html += '<td class="col-cyan text-gray-400">-</td>';
-                }
-            });
-            html += '</tr>';
-
-            // 总商维度行（8城合计，区别于广西区域72967）
-            var t8Row = total8Summary;
-            var t8RateClass = getRateClass(t8Row['上线率']);
-            var t8ConquerClass = getRateClass(t8Row['攻克率']);
-            html += '<tr class="summary-row total8-row">';
-            html += '<td class="city-cell col-gold">总商维度</td>';
-            html += '<td class="kpi-type-cell col-gold">汇总(8城)</td>';
-            html += '<td class="col-gold">' + t8Row['目标'] + '</td>';
-            html += '<td class="col-gold">' + t8Row['达标'] + '</td>';
-            html += '<td class="col-gold ' + t8RateClass + '">' + t8Row['上线率'].toFixed(2) + '%</td>';
-            html += '<td class="col-gold text-gray-400">-</td>';
-            html += '<td class="col-gold">' + t8Row['攻克数'] + '</td>';
-            html += '<td class="col-gold ' + t8ConquerClass + '">' + t8Row['攻克率'].toFixed(2) + '%</td>';
-            html += '<td class="col-gold text-gray-400">-</td>';
-            html += '<td class="col-gold text-gray-400">-</td>';
-            gxSrcOrder.forEach(function(src) {
-                var d = t8Row['来源明细'] ? t8Row['来源明细'][src] : null;
-                if (d) {
-                    html += '<td class="col-gold">' + d['目标'] + '</td>';
-                    html += '<td class="col-gold">' + d['达标'] + '</td>';
-                    html += '<td class="col-gold ' + getRateClass(d['上线率']) + '">' + d['上线率'].toFixed(2) + '%</td>';
-                } else {
-                    html += '<td class="col-gold text-gray-400">-</td>';
-                    html += '<td class="col-gold text-gray-400">-</td>';
-                    html += '<td class="col-gold text-gray-400">-</td>';
                 }
             });
             html += '</tr>';
