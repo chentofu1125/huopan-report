@@ -305,7 +305,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-02（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-03 12:05:19</span>
+                            <span>生成时间：2026-08-03 12:12:47</span>
                         </p>
                     </div>
                 </div>
@@ -327,11 +327,11 @@
                             <span class="text-2xl">🎯</span>
                             <span class="text-sm text-gray-500 font-medium">总目标数</span>
                         </div>
-                        <div class="text-3xl font-bold text-gray-800" id="total-target">-</div>
-                        <div class="text-xs text-gray-400 mt-1">全部城市合计</div>
+                        <div class="text-2xl font-bold text-gray-800" id="total-target">-</div>
+                        <div class="text-sm text-gray-400 mt-1">全部城市合计</div>
                     </div>
                     <div class="text-right flex flex-col justify-end h-full">
-                        <div class="text-xs text-gray-400 mb-1">广西区域</div>
+                        <div class="text-sm text-gray-400 mb-1">广西区域</div>
                         <div class="text-sm font-semibold text-purple-600" id="gx-target">-</div>
                     </div>
                 </div>
@@ -343,11 +343,11 @@
                             <span class="text-2xl">✅</span>
                             <span class="text-sm text-gray-500 font-medium">总达标数</span>
                         </div>
-                        <div class="text-3xl font-bold text-gray-800" id="total-reach">-</div>
-                        <div class="text-xs text-gray-400 mt-1" id="total-reach-rate">上线率 -</div>
+                        <div class="text-2xl font-bold text-gray-800" id="total-reach">-</div>
+                        <div class="text-sm text-gray-400 mt-1" id="total-reach-rate">上线率 -</div>
                     </div>
                     <div class="text-right flex flex-col justify-end h-full">
-                        <div class="text-xs text-gray-400 mb-1">vs 广西区域</div>
+                        <div class="text-sm text-gray-400 mb-1">vs 广西区域</div>
                         <div class="text-sm font-semibold" id="gx-reach-diff-value">-</div>
                     </div>
                 </div>
@@ -359,11 +359,11 @@
                             <span class="text-2xl">🔥</span>
                             <span class="text-sm text-gray-500 font-medium">总攻克数</span>
                         </div>
-                        <div class="text-3xl font-bold text-gray-800" id="total-conquer">-</div>
-                        <div class="text-xs text-gray-400 mt-1" id="total-conquer-rate">攻克率 -</div>
+                        <div class="text-2xl font-bold text-gray-800" id="total-conquer">-</div>
+                        <div class="text-sm text-gray-400 mt-1" id="total-conquer-rate">攻克率 -</div>
                     </div>
                     <div class="text-right flex flex-col justify-end h-full">
-                        <div class="text-xs text-gray-400 mb-1">vs 广西区域</div>
+                        <div class="text-sm text-gray-400 mb-1">vs 广西区域</div>
                         <div class="text-sm font-semibold" id="gx-conquer-diff-value">-</div>
                     </div>
                 </div>
@@ -375,8 +375,8 @@
                             <span class="text-2xl">📉</span>
                             <span class="text-sm text-gray-500 font-medium">距75%攻克差值</span>
                         </div>
-                        <div class="text-3xl font-bold" id="total-diff">-</div>
-                        <div class="text-xs text-gray-400 mt-1">总差值（数量）</div>
+                        <div class="text-2xl font-bold" id="total-diff">-</div>
+                        <div class="text-sm text-gray-400 mt-1">总差值（数量）</div>
                     </div>
                 </div>
             </div>
@@ -620,7 +620,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-03 12:05:19 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-03 12:12:47 | 仅供参考</p>
         </div>
     </div>
 
@@ -6199,9 +6199,9 @@ const reportData = [
             var diffEl = document.getElementById('total-diff');
             diffEl.textContent = (totalDiffCount > 0 ? '+' : '') + Math.round(totalDiffCount).toLocaleString();
             if (totalDiffCount >= 0) {
-                diffEl.className = 'text-3xl font-bold text-green-600';
+                diffEl.className = 'text-2xl font-bold text-green-600';
             } else {
-                diffEl.className = 'text-3xl font-bold text-red-600';
+                diffEl.className = 'text-2xl font-bold text-red-600';
             }
 
             // 更新右侧广西区域对比数据
@@ -6302,7 +6302,8 @@ const reportData = [
                             grid: { color: 'rgba(0,0,0,0.05)' }
                         },
                         x: {
-                            grid: { display: false }
+                            grid: { display: false },
+                            ticks: { font: { size: 14, weight: '500' } }
                         }
                     }
                 }
