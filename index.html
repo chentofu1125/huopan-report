@@ -63,6 +63,9 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--gray-200);
         }
+        /* 重点货盘明细自适应缩放：缩小窗口时整表等比缩放到容器宽度，便于整屏截图 */
+        #detail-table-wrapper, #bd-table-wrapper { position: relative; }
+        #detail-table-scaler, #bd-table-scaler { transform-origin: top left; }
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -305,7 +308,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-02（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-03 12:19:31</span>
+                            <span>生成时间：2026-08-03 12:27:27</span>
                         </p>
                     </div>
                 </div>
@@ -422,7 +425,8 @@
                 </div>
             </div>
 
-            <div class="table-container overflow-x-auto" id="detail-table-wrapper">
+            <div class="table-container" id="detail-table-wrapper">
+                <div id="detail-table-scaler">
                 <table class="data-table" id="detailTable">
                     <thead>
                         <!-- 第1行：大类标题 -->
@@ -470,9 +474,11 @@
                     </thead>
                     <tbody id="detailTableBody"></tbody>
                 </table>
+                </div>
             </div>
 
-            <div class="table-container overflow-x-auto" id="bd-table-wrapper" style="display:none;">
+            <div class="table-container" id="bd-table-wrapper" style="display:none;">
+                <div id="bd-table-scaler">
                 <table class="data-table" id="bdTable">
                     <thead>
                         <!-- 第1行：大类标题 -->
@@ -520,6 +526,7 @@
                     </thead>
                     <tbody id="bdTableBody"></tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -620,7 +627,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-03 12:19:31 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-03 12:27:27 | 仅供参考</p>
         </div>
     </div>
 
@@ -6477,6 +6484,25 @@ function renderInsightsAnalysis() {
             tbody.innerHTML = html;
         }
 
+function fitDetailTables() {
+    ['detail-table-wrapper', 'bd-table-wrapper'].forEach(function(wid) {
+        var wrapper = document.getElementById(wid);
+        if (!wrapper || wrapper.style.display === 'none') return;
+        var scalerId = (wid === 'detail-table-wrapper') ? 'detail-table-scaler' : 'bd-table-scaler';
+        var scaler = document.getElementById(scalerId);
+        var table = wrapper.querySelector('table');
+        if (!scaler || !table) return;
+        scaler.style.transform = 'none';
+        var availW = wrapper.clientWidth;
+        var natW = table.scrollWidth;
+        var natH = table.offsetHeight;
+        if (!natW) return;
+        var scale = Math.min(1, availW / natW);
+        scaler.style.transform = 'scale(' + scale + ')';
+        wrapper.style.height = (natH * scale) + 'px';
+    });
+}
+
 function init() {
             try { renderKPIs(); } catch(e) { console.error('renderKPIs:', e); }
             try { renderChart(); } catch(e) { console.error('renderChart:', e); }
@@ -6504,6 +6530,7 @@ function init() {
                         bdWrapper.style.display = '';
                         renderBDTable();
                     }
+                    fitDetailTables();
                 });
             }
 
@@ -6526,6 +6553,9 @@ function init() {
                     }
                 });
             }
+
+            fitDetailTables();
+            window.addEventListener('resize', fitDetailTables);
         }
     </script>
 </body>
