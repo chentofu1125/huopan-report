@@ -118,6 +118,10 @@
             color: #92400E;
             border-bottom: 3px solid #F59E0B;
         }
+        /* 总商维度汇总行：间隔线在单元格上方 */
+        .data-table tbody tr.total8-row td {
+            border-top: 3px solid #F59E0B;
+        }
         .data-table th.row3 {
             padding: 10px 6px;
             text-align: center;
@@ -309,7 +313,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-12（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-13 10:47:42</span>
+                            <span>生成时间：2026-08-13 11:06:41</span>
                         </p>
                     </div>
                 </div>
@@ -423,6 +427,10 @@
                         <option value="东兰县">东兰县</option>
                         <option value="凤山县">凤山县</option>
                     </select>
+                    <button id="detail-fit-toggle"
+                            class="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm">
+                        📐 整屏适配
+                    </button>
                 </div>
             </div>
 
@@ -632,7 +640,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-13 10:47:42 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-13 11:06:41 | 仅供参考</p>
         </div>
     </div>
 
@@ -6149,6 +6157,51 @@ const reportData = [
                 html += '</tr>';
             });
 
+            // 追加总商维度汇总行（显示在表格最后面），格式同广西区域，间隔线在单元格上方
+            var t8Row = total8Summary;
+            if (t8Row && t8Row['上线率'] !== undefined) {
+                var t8RateClass = getRateClass(t8Row['上线率']);
+                var t8ConquerClass = getRateClass(t8Row['攻克率']);
+                html += '<tr class="summary-row total8-row">';
+                html += '<td class="city-cell col-summary">总商维度</td>';
+                html += '<td class="kpi-type-cell col-summary">汇总</td>';
+                html += '<td class="col-blue">' + t8Row['目标'] + '</td>';
+                html += '<td class="col-blue">' + t8Row['达标'] + '</td>';
+                html += '<td class="col-blue ' + t8RateClass + '">' + t8Row['上线率'].toFixed(2) + '%</td>';
+                // 上线dod（总商维度无逐日dod，显示-）
+                html += '<td class="col-blue text-gray-400">-</td>';
+                html += '<td class="col-blue">' + t8Row['攻克数'] + '</td>';
+                html += '<td class="col-blue ' + t8ConquerClass + '">' + t8Row['攻克率'].toFixed(2) + '%</td>';
+                // 攻克dod（无，显示-）
+                html += '<td class="col-blue text-gray-400">-</td>';
+                // 距目标差值
+                var t8Diff = t8Row['距目标差值'];
+                if (t8Diff !== undefined && t8Diff !== null && t8Diff !== '-') {
+                    html += '<td class="col-blue"><span class="' + getDiffClass(t8Diff) + '">' + t8Diff + '</span></td>';
+                } else {
+                    html += '<td class="col-blue text-gray-400">-</td>';
+                }
+                // 拼好饭/神抢手 货盘汇总上线率
+                var t8PhfRate = getGroupRate(t8Row, PHF_SOURCES);
+                var t8SqhRate = getGroupRate(t8Row, SQH_SOURCES);
+                html += '<td class="col-blue ' + getRateClass(t8PhfRate) + '">' + t8PhfRate.toFixed(2) + '%</td>';
+                html += '<td class="col-blue ' + getRateClass(t8SqhRate) + '">' + t8SqhRate.toFixed(2) + '%</td>';
+                var t8SrcOrder = ['拼好饭场域高销', '拼好饭定品招商', '神抢手场域高销', '神抢手商品推荐', '神抢手组套推荐'];
+                t8SrcOrder.forEach(function(src) {
+                    var d = t8Row['来源明细'][src];
+                    if (d) {
+                        html += '<td class="col-cyan">' + d['目标'] + '</td>';
+                        html += '<td class="col-cyan">' + d['达标'] + '</td>';
+                        html += '<td class="col-cyan ' + getRateClass(d['上线率']) + '">' + d['上线率'].toFixed(2) + '%</td>';
+                    } else {
+                        html += '<td class="col-cyan text-gray-400">-</td>';
+                        html += '<td class="col-cyan text-gray-400">-</td>';
+                        html += '<td class="col-cyan text-gray-400">-</td>';
+                    }
+                });
+                html += '</tr>';
+            }
+
             tbody.innerHTML = html;
         }
 
@@ -6558,6 +6611,8 @@ function renderInsightsAnalysis() {
             tbody.innerHTML = html;
         }
 
+// 重点货盘明细布局：false=滚动查看(保持14px原字号，放不下出横条)；true=整屏适配(整表等比缩放铺满，便于截图)
+var detailFitMode = false;
 function fitDetailTables() {
     ['detail-table-wrapper', 'bd-table-wrapper'].forEach(function(wid) {
         var wrapper = document.getElementById(wid);
@@ -6566,15 +6621,34 @@ function fitDetailTables() {
         var scaler = document.getElementById(scalerId);
         var table = wrapper.querySelector('table');
         if (!scaler || !table) return;
-        scaler.style.transform = 'none';
-        var availW = wrapper.clientWidth;
-        var natW = table.scrollWidth;
-        var natH = table.offsetHeight;
-        if (!natW) return;
-        var scale = Math.min(1, availW / natW);
-        scaler.style.transform = 'scale(' + scale + ')';
-        wrapper.style.height = (natH * scale) + 'px';
+        if (detailFitMode) {
+            // 整屏适配：整表等比缩小铺满容器，不出横条，便于整屏截图
+            scaler.style.transform = 'none';
+            var availW = wrapper.clientWidth;
+            var natW = table.scrollWidth;
+            var natH = table.offsetHeight;
+            if (!natW) { wrapper.style.overflowX = 'hidden'; return; }
+            var scale = Math.min(1, availW / natW);
+            scaler.style.transform = 'scale(' + scale + ')';
+            wrapper.style.overflowX = 'hidden';
+            wrapper.style.height = (natH * scale) + 'px';
+        } else {
+            // 滚动查看：保持14px原字号，放不下则下方出现横向滚动条
+            scaler.style.transform = 'none';
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.height = 'auto';
+        }
     });
+    var btn = document.getElementById('detail-fit-toggle');
+    if (btn) {
+        if (detailFitMode) {
+            btn.innerHTML = '🔍 滚动查看';
+            btn.className = 'inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm';
+        } else {
+            btn.innerHTML = '📐 整屏适配';
+            btn.className = 'inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm';
+        }
+    }
 }
 
 function init() {
@@ -6604,6 +6678,15 @@ function init() {
                         bdWrapper.style.display = '';
                         renderBDTable();
                     }
+                    fitDetailTables();
+                });
+            }
+
+            // 重点货盘明细：滚动查看 / 整屏适配 切换
+            var fitBtn = document.getElementById('detail-fit-toggle');
+            if (fitBtn) {
+                fitBtn.addEventListener('click', function() {
+                    detailFitMode = !detailFitMode;
                     fitDetailTables();
                 });
             }
