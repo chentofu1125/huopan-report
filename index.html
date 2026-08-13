@@ -313,7 +313,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-12（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-13 11:06:41</span>
+                            <span>生成时间：2026-08-13 11:55:50</span>
                         </p>
                     </div>
                 </div>
@@ -427,10 +427,6 @@
                         <option value="东兰县">东兰县</option>
                         <option value="凤山县">凤山县</option>
                     </select>
-                    <button id="detail-fit-toggle"
-                            class="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm">
-                        📐 整屏适配
-                    </button>
                 </div>
             </div>
 
@@ -640,7 +636,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-13 11:06:41 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-13 11:55:50 | 仅供参考</p>
         </div>
     </div>
 
@@ -6611,8 +6607,7 @@ function renderInsightsAnalysis() {
             tbody.innerHTML = html;
         }
 
-// 重点货盘明细布局：false=滚动查看(保持14px原字号，放不下出横条)；true=整屏适配(整表等比缩放铺满，便于截图)
-var detailFitMode = false;
+// 重点货盘明细布局：始终等比缩放到容器宽度 —— 整表完整显示(无横条)，窗口缩小即整屏可见便于截图
 function fitDetailTables() {
     ['detail-table-wrapper', 'bd-table-wrapper'].forEach(function(wid) {
         var wrapper = document.getElementById(wid);
@@ -6621,34 +6616,16 @@ function fitDetailTables() {
         var scaler = document.getElementById(scalerId);
         var table = wrapper.querySelector('table');
         if (!scaler || !table) return;
-        if (detailFitMode) {
-            // 整屏适配：整表等比缩小铺满容器，不出横条，便于整屏截图
-            scaler.style.transform = 'none';
-            var availW = wrapper.clientWidth;
-            var natW = table.scrollWidth;
-            var natH = table.offsetHeight;
-            if (!natW) { wrapper.style.overflowX = 'hidden'; return; }
-            var scale = Math.min(1, availW / natW);
-            scaler.style.transform = 'scale(' + scale + ')';
-            wrapper.style.overflowX = 'hidden';
-            wrapper.style.height = (natH * scale) + 'px';
-        } else {
-            // 滚动查看：保持14px原字号，放不下则下方出现横向滚动条
-            scaler.style.transform = 'none';
-            wrapper.style.overflowX = 'auto';
-            wrapper.style.height = 'auto';
-        }
+        scaler.style.transform = 'none';
+        var availW = wrapper.clientWidth;
+        var natW = table.scrollWidth;
+        var natH = table.offsetHeight;
+        if (!natW) { wrapper.style.overflowX = 'hidden'; return; }
+        var scale = Math.min(1, availW / natW);
+        scaler.style.transform = 'scale(' + scale + ')';
+        wrapper.style.overflowX = 'hidden';
+        wrapper.style.height = (natH * scale) + 'px';
     });
-    var btn = document.getElementById('detail-fit-toggle');
-    if (btn) {
-        if (detailFitMode) {
-            btn.innerHTML = '🔍 滚动查看';
-            btn.className = 'inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm';
-        } else {
-            btn.innerHTML = '📐 整屏适配';
-            btn.className = 'inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm';
-        }
-    }
 }
 
 function init() {
@@ -6678,15 +6655,6 @@ function init() {
                         bdWrapper.style.display = '';
                         renderBDTable();
                     }
-                    fitDetailTables();
-                });
-            }
-
-            // 重点货盘明细：滚动查看 / 整屏适配 切换
-            var fitBtn = document.getElementById('detail-fit-toggle');
-            if (fitBtn) {
-                fitBtn.addEventListener('click', function() {
-                    detailFitMode = !detailFitMode;
                     fitDetailTables();
                 });
             }
