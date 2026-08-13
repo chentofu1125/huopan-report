@@ -63,9 +63,9 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--gray-200);
         }
-        /* 重点货盘明细自适应缩放：缩小窗口时整表等比缩放到容器宽度，整屏可见便于截图 */
-        #detail-table-wrapper, #bd-table-wrapper { position: relative; }
-        #detail-table-scaler, #bd-table-scaler { transform-origin: top left; }
+        /* 重点货盘明细：原始字号，超宽出横条；浏览器缩放(80%/50%)时文字等比变小、表格自然完整显示 */
+        #detail-table-wrapper, #bd-table-wrapper { overflow-x: auto; overflow-y: visible; }
+        #detailTable, #bdTable { width: auto; min-width: 100%; }
         #detailTable th.row3, #bdTable th.row3 { white-space: nowrap; }
         .data-table {
             width: 100%;
@@ -313,7 +313,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-12（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-13 11:55:50</span>
+                            <span>生成时间：2026-08-13 12:04:41</span>
                         </p>
                     </div>
                 </div>
@@ -431,7 +431,6 @@
             </div>
 
             <div class="table-container" id="detail-table-wrapper">
-                <div id="detail-table-scaler">
                 <table class="data-table" id="detailTable">
                     <thead>
                         <!-- 第1行：大类标题 -->
@@ -481,11 +480,9 @@
                     </thead>
                     <tbody id="detailTableBody"></tbody>
                 </table>
-                </div>
             </div>
 
             <div class="table-container" id="bd-table-wrapper" style="display:none;">
-                <div id="bd-table-scaler">
                 <table class="data-table" id="bdTable">
                     <thead>
                         <!-- 第1行：大类标题 -->
@@ -535,7 +532,6 @@
                     </thead>
                     <tbody id="bdTableBody"></tbody>
                 </table>
-                </div>
             </div>
         </div>
 
@@ -636,7 +632,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-13 11:55:50 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-13 12:04:41 | 仅供参考</p>
         </div>
     </div>
 
@@ -6607,27 +6603,6 @@ function renderInsightsAnalysis() {
             tbody.innerHTML = html;
         }
 
-// 重点货盘明细布局：始终等比缩放到容器宽度 —— 整表完整显示(无横条)，窗口缩小即整屏可见便于截图
-function fitDetailTables() {
-    ['detail-table-wrapper', 'bd-table-wrapper'].forEach(function(wid) {
-        var wrapper = document.getElementById(wid);
-        if (!wrapper || wrapper.style.display === 'none') return;
-        var scalerId = (wid === 'detail-table-wrapper') ? 'detail-table-scaler' : 'bd-table-scaler';
-        var scaler = document.getElementById(scalerId);
-        var table = wrapper.querySelector('table');
-        if (!scaler || !table) return;
-        scaler.style.transform = 'none';
-        var availW = wrapper.clientWidth;
-        var natW = table.scrollWidth;
-        var natH = table.offsetHeight;
-        if (!natW) { wrapper.style.overflowX = 'hidden'; return; }
-        var scale = Math.min(1, availW / natW);
-        scaler.style.transform = 'scale(' + scale + ')';
-        wrapper.style.overflowX = 'hidden';
-        wrapper.style.height = (natH * scale) + 'px';
-    });
-}
-
 function init() {
             try { renderKPIs(); } catch(e) { console.error('renderKPIs:', e); }
             try { renderChart(); } catch(e) { console.error('renderChart:', e); }
@@ -6655,7 +6630,6 @@ function init() {
                         bdWrapper.style.display = '';
                         renderBDTable();
                     }
-                    fitDetailTables();
                 });
             }
 
@@ -6678,9 +6652,6 @@ function init() {
                     }
                 });
             }
-
-            fitDetailTables();
-            window.addEventListener('resize', fitDetailTables);
         }
     </script>
 </body>
