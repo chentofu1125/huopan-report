@@ -315,7 +315,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-16（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-17 17:36:28</span>
+                            <span>生成时间：2026-08-17 17:43:56</span>
                         </p>
                     </div>
                 </div>
@@ -430,8 +430,8 @@
                         <option value="凤山县">凤山县</option>
                     </select>
                     <button id="detail-fit-toggle"
-                            class="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm">
-                        📐 整屏适配
+                            class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm">
+                        🔍 滚动查看
                     </button>
                 </div>
             </div>
@@ -642,7 +642,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-17 17:36:28 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-17 17:43:56 | 仅供参考</p>
         </div>
     </div>
 
@@ -6616,8 +6616,8 @@ function renderInsightsAnalysis() {
             tbody.innerHTML = html;
         }
 
-// 重点货盘明细布局：false=滚动查看(自然宽度+横条，与其他卡片同宽、缩放生效)；true=整屏适配(整表缩放到板块内完整显示，无横条，便于截图)
-var detailFitMode = false;
+// 重点货盘明细布局：默认整屏适配(整表缩放到板块内完整显示，无横条，缩到任意大小都完整便于截图)；点按钮切到滚动查看(原字号+横条)
+var detailFitMode = true;
 function fitDetailTables() {
     ['detail-table-wrapper', 'bd-table-wrapper'].forEach(function(wid) {
         var wrapper = document.getElementById(wid);
