@@ -63,8 +63,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--gray-200);
         }
-        /* 重点货盘明细：自然宽度+横条，浏览器缩放真实生效(放大看大字号/缩小看全)；板块突破1600容器用满全屏宽 */
-        .full-bleed { width: 100vw; margin-left: calc(50% - 50vw); }
+        /* 重点货盘明细：自然宽度+横条，浏览器缩放真实生效(放大看大字号/缩小看全)；板块与其他卡片同宽、表格内部横向滚动 */
         #detail-table-wrapper, #bd-table-wrapper { overflow-x: auto; }
         #detailTable, #bdTable { width: auto; min-width: 100%; }
         #detailTable th.row3, #bdTable th.row3 { white-space: nowrap; }
@@ -315,7 +314,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-16（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-17 17:17:39</span>
+                            <span>生成时间：2026-08-17 17:31:30</span>
                         </p>
                     </div>
                 </div>
@@ -404,7 +403,7 @@
         </div>
 
         <!-- 主数据表格：BD维度 -->
-        <div class="glass-card p-6 animate-fade-in full-bleed" id="main-bd-section">
+        <div class="glass-card p-6 animate-fade-in" id="main-bd-section">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
                     <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-sm">📋</span>
@@ -634,7 +633,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-17 17:17:39 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-17 17:31:30 | 仅供参考</p>
         </div>
     </div>
 
