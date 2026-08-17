@@ -63,8 +63,9 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--gray-200);
         }
-        /* 重点货盘明细：自然宽度+横条，浏览器缩放真实生效(放大看大字号/缩小看全)；板块与其他卡片同宽、表格内部横向滚动 */
+        /* 重点货盘明细：默认自然宽度+横条(与其他卡片同宽、缩放生效)；点"整屏适配"时整表缩放到板块内完整显示(无横条) */
         #detail-table-wrapper, #bd-table-wrapper { overflow-x: auto; }
+        #detail-table-scaler, #bd-table-scaler { transform-origin: top left; }
         #detailTable, #bdTable { width: auto; min-width: 100%; }
         #detailTable th.row3, #bdTable th.row3 { white-space: nowrap; }
         #detailTable th.row3, #bdTable th.row3 { white-space: nowrap; }
@@ -314,7 +315,7 @@
                             <span class="badge badge-success">日报</span>
                             <span>数据日期：2026-08-16（T-1）</span>
                             <span class="text-gray-300">|</span>
-                            <span>生成时间：2026-08-17 17:31:30</span>
+                            <span>生成时间：2026-08-17 17:36:28</span>
                         </p>
                     </div>
                 </div>
@@ -428,10 +429,15 @@
                         <option value="东兰县">东兰县</option>
                         <option value="凤山县">凤山县</option>
                     </select>
+                    <button id="detail-fit-toggle"
+                            class="inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm">
+                        📐 整屏适配
+                    </button>
                 </div>
             </div>
 
             <div class="table-container" id="detail-table-wrapper">
+                <div id="detail-table-scaler">
                 <table class="data-table" id="detailTable">
                     <thead>
                         <!-- 第1行：大类标题 -->
@@ -481,9 +487,11 @@
                     </thead>
                     <tbody id="detailTableBody"></tbody>
                 </table>
+                </div>
             </div>
 
             <div class="table-container" id="bd-table-wrapper" style="display:none;">
+                <div id="bd-table-scaler">
                 <table class="data-table" id="bdTable">
                     <thead>
                         <!-- 第1行：大类标题 -->
@@ -533,6 +541,7 @@
                     </thead>
                     <tbody id="bdTableBody"></tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -633,7 +642,7 @@
 <!-- 底部 -->
         <div class="text-center text-gray-500 text-sm py-4">
             <p>广西区域运营数据中心 · 数据来源于商品日报明细汇总</p>
-            <p class="mt-1">报告生成时间：2026-08-17 17:31:30 | 仅供参考</p>
+            <p class="mt-1">报告生成时间：2026-08-17 17:36:28 | 仅供参考</p>
         </div>
     </div>
 
@@ -6607,6 +6616,44 @@ function renderInsightsAnalysis() {
             tbody.innerHTML = html;
         }
 
+// 重点货盘明细布局：false=滚动查看(自然宽度+横条，与其他卡片同宽、缩放生效)；true=整屏适配(整表缩放到板块内完整显示，无横条，便于截图)
+var detailFitMode = false;
+function fitDetailTables() {
+    ['detail-table-wrapper', 'bd-table-wrapper'].forEach(function(wid) {
+        var wrapper = document.getElementById(wid);
+        if (!wrapper || wrapper.style.display === 'none') return;
+        var scalerId = (wid === 'detail-table-wrapper') ? 'detail-table-scaler' : 'bd-table-scaler';
+        var scaler = document.getElementById(scalerId);
+        var table = wrapper.querySelector('table');
+        if (!scaler || !table) return;
+        if (detailFitMode) {
+            scaler.style.transform = 'none';
+            var availW = wrapper.clientWidth;
+            var natW = table.scrollWidth;
+            var natH = table.offsetHeight;
+            if (!natW) { wrapper.style.overflowX = 'hidden'; return; }
+            var scale = Math.min(1, availW / natW);
+            scaler.style.transform = 'scale(' + scale + ')';
+            wrapper.style.overflowX = 'hidden';
+            wrapper.style.height = (natH * scale) + 'px';
+        } else {
+            scaler.style.transform = 'none';
+            wrapper.style.overflowX = 'auto';
+            wrapper.style.height = 'auto';
+        }
+    });
+    var btn = document.getElementById('detail-fit-toggle');
+    if (btn) {
+        if (detailFitMode) {
+            btn.innerHTML = '🔍 滚动查看';
+            btn.className = 'inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm';
+        } else {
+            btn.innerHTML = '📐 整屏适配';
+            btn.className = 'inline-flex items-center gap-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors duration-200 shadow-sm';
+        }
+    }
+}
+
 function init() {
             try { renderKPIs(); } catch(e) { console.error('renderKPIs:', e); }
             try { renderChart(); } catch(e) { console.error('renderChart:', e); }
@@ -6628,11 +6675,13 @@ function init() {
                         detailWrapper.style.display = '';
                         bdWrapper.style.display = 'none';
                         renderTable();
+                        fitDetailTables();
                     } else {
                         // 显示BD维度表格
                         detailWrapper.style.display = 'none';
                         bdWrapper.style.display = '';
                         renderBDTable();
+                        fitDetailTables();
                     }
                 });
             }
@@ -6656,6 +6705,18 @@ function init() {
                     }
                 });
             }
+
+            // 重点货盘明细：滚动查看 / 整屏适配 切换
+            var fitBtn = document.getElementById('detail-fit-toggle');
+            if (fitBtn) {
+                fitBtn.addEventListener('click', function() {
+                    detailFitMode = !detailFitMode;
+                    fitDetailTables();
+                });
+            }
+
+            fitDetailTables();
+            window.addEventListener('resize', fitDetailTables);
         }
     </script>
 </body>
